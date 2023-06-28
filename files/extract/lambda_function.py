@@ -5,27 +5,38 @@ import os_function
 from opensearchpy import OpenSearch, helpers
 from opensearchpy.helpers import bulk
 
+password = None
+client = None
+
+
 def lambda_handler(event, context):
+    global password
+    global client
+    
     print(f"Event: {json.dumps(event)}")
     # Retrieve the input from the event object
     input_data = event.get('input')
-    
+
     print('input_data', input_data)
-    
-    password = wrapper.get_password()
-    client = os_function.connect(password)
+
+    if password is None:
+        print('in password lookup')
+        password = wrapper.get_password()
+    if client is None:
+        print('in OS connection')
+        client = os_function.connect(password)
 
     response_body = ""
     status_code = 0
-    try:   
+    try:
         resp = client.search(
-        index="recipes",
-        body={
-            "query": {
-                "match_all": {}
+            index="recipes",
+            body={
+                "query": {
+                    "match_all": {}
+                },
             },
-        },
-        size=5
+            size=5
         )
 
         selected_documents = resp['hits']['hits']
@@ -33,7 +44,6 @@ def lambda_handler(event, context):
         # Print the selected documents
         for doc in selected_documents:
             print(doc['_source'])
-
 
         print('Search Response: ', selected_documents)
         response_body = selected_documents
