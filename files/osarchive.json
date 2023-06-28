@@ -1,0 +1,25 @@
+{
+  "Comment": "A simple Step Function with 2 Lambda calls",
+  "StartAt": "OSRetrieve",
+  "States": {
+    "OSRetrieve": {
+      "Type": "Task",
+      "Resource": "${lambda_extract}",
+      "ResultPath": "$.extract_output",
+      "Next": "OSTransform"
+    },
+    "OSTransform": {
+      "Type": "Task",
+      "Resource": "${lambda_transform}",
+      "InputPath": "$.extract_output",
+      "ResultPath": "$.transform_output",
+      "Next": "OSStore"
+    },
+    "OSStore": {
+      "Type": "Task",
+      "Resource": "${lambda_load}",
+      "InputPath": "$.transform_output",
+      "End": true
+    }
+  }
+}
