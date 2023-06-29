@@ -8,13 +8,11 @@ Simple Terraform project creating a step function that has multiple steps workin
 
 ### Steps
 
-1. Invoke Step funtion 1
-2. Step 1 executes Step Function 2
-3. Step 1 exectues lambda
-4. Step 2 executes lambda
-5. response sent back to Step Function 1
-6. Step 2 executes lambda
-7. Process Ends
+1. Invoke Step funtion 
+2. Step 1 execute Extract Lambda Function
+3. Step 2 exectues Transform lambda function
+4. Step 3 executes Load lambda function
+5. Process Ends
 
 ## Prerequisites
 Before you begin, make sure you have the following prerequisites:
