@@ -52,3 +52,8 @@ Before you begin, make sure you have the following prerequisites:
 * [Terraform Documentation](https://developer.hashicorp.com/terraform/docs)
 * [AWS Provider Documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
 * [Start a Workflow within a Workflow](https://docs.aws.amazon.com/step-functions/latest/dg/sample-start-workflow.html)
+* [Working with Neo4j](https://medium.com/@kashish.gakkar/working-with-neo4j-using-python-131ccc074947)
+
+### For MAC
+
+* `terraform init` wouldn't run couldn't find a template for a provider.  Used the [following](https://sharepointdevelopmentblog.wordpress.com/2023/02/07/terraform-template-v2-2-0-does-not-have-a-package-available-mac-m1/) to get it working.
