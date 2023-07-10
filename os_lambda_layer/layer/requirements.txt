@@ -9,3 +9,4 @@ PyHamcrest
 pylint
 pylint-fail-under
 coverage
+neo4j

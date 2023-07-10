@@ -8,6 +8,9 @@ data "template_file" "os_archive" {
   }
 }
 
+module "ssm_parameter" {
+  source = "./ssm"
+}
 
 module "wrapper_layer" {
   source = "./wrapper_layer"
@@ -25,6 +28,7 @@ module "extract" {
   ssm_parameter_name = var.ssm_parameter_name
   os_uri             = var.os_uri
   master_user        = var.os_master_user
+  neo4j_user         = module.ssm_parameter.ssm_parameter_name
 }
 
 module "transform" {
@@ -35,6 +39,7 @@ module "transform" {
   ssm_parameter_name = var.ssm_parameter_name
   os_uri             = var.os_uri
   master_user        = var.os_master_user
+  neo4j_user         = module.ssm_parameter.ssm_parameter_name
 }
 
 module "load" {
@@ -45,6 +50,7 @@ module "load" {
   ssm_parameter_name = var.ssm_parameter_name
   os_uri             = var.os_uri
   master_user        = var.os_master_user
+  neo4j_user         = module.ssm_parameter.ssm_parameter_name
 }
 
 module "os_archive" {

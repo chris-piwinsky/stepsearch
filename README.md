@@ -57,3 +57,8 @@ Before you begin, make sure you have the following prerequisites:
 ### For MAC
 
 * `terraform init` wouldn't run couldn't find a template for a provider.  Used the [following](https://sharepointdevelopmentblog.wordpress.com/2023/02/07/terraform-template-v2-2-0-does-not-have-a-package-available-mac-m1/) to get it working.
+
+### Neo4j Reference
+
+* [EC2 Neo4j](https://www.inoutcode.com/aws/how-to-setup-neo4j-on-aws-ec2/)
+* [Youtube overview](https://www.youtube.com/watch?v=Vu5UQoRuvdM)
