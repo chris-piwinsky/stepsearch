@@ -1,3 +1,0 @@
-[console_scripts]
-pylint-fail-under = pylint_fail_under.__main__:main
-
