@@ -5,6 +5,8 @@ variable "ssm_parameter_name" {}
 variable "os_uri" {}
 variable "master_user" {}
 variable "neo4j_user" {}
+variable "efs_mount_path" {}
+variable "environment_variables" {}
 
 resource "aws_lambda_function" "test_lambda" {
   # If the file is not in the current working directory you will need to include a
@@ -20,12 +22,7 @@ resource "aws_lambda_function" "test_lambda" {
   runtime = "python3.9"
 
   environment {
-    variables = {
-      SSM_PARAMETER = var.ssm_parameter_name
-      OS_URI        = var.os_uri
-      MASTER_USER   = var.master_user
-      NEO4J_PARAMS    = var.neo4j_user
-    }
+    variables = var.environment_variables
   }
 }
 

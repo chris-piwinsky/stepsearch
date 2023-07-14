@@ -20,37 +20,57 @@ module "os_layer" {
   source = "./os_lambda_layer"
 }
 
+module "efs_mount" {
+  source = "./efs"
+}
+
+locals {
+  extract_vars = {
+    SSM_PARAMETER  = var.ssm_parameter_name
+    OS_URI         = var.os_uri
+    MASTER_USER    = var.master_user
+    NEO4J_PARAMS   = module.ssm_parameter.ssm_parameter_name
+    EFS_MOUNT_PATH = var.efs_mount_path
+  }
+
+  transform_vars = {
+    SSM_PARAMETER  = var.ssm_parameter_name
+    OS_URI         = var.os_uri
+    MASTER_USER    = var.master_user
+    NEO4J_PARAMS   = module.ssm_parameter.ssm_parameter_name
+    EFS_MOUNT_PATH = var.efs_mount_path
+  }
+
+  load_vars = {
+    SSM_PARAMETER  = var.ssm_parameter_name
+    OS_URI         = var.os_uri
+    MASTER_USER    = var.master_user
+    NEO4J_PARAMS   = module.ssm_parameter.ssm_parameter_name
+    EFS_MOUNT_PATH = var.efs_mount_path
+  }
+}
 module "extract" {
-  source             = "./lambda"
-  lambda_name        = "lambda_extract"
-  layers             = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
-  archive_file       = data.archive_file.extract
-  ssm_parameter_name = var.ssm_parameter_name
-  os_uri             = var.os_uri
-  master_user        = var.os_master_user
-  neo4j_user         = module.ssm_parameter.ssm_parameter_name
+  source                = "./lambda"
+  lambda_name           = "lambda_extract"
+  layers                = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
+  archive_file          = data.archive_file.extract
+  environment_variables = local.extract_vars
 }
 
 module "transform" {
-  source             = "./lambda"
-  lambda_name        = "lambda_transform"
-  layers             = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
-  archive_file       = data.archive_file.transform
-  ssm_parameter_name = var.ssm_parameter_name
-  os_uri             = var.os_uri
-  master_user        = var.os_master_user
-  neo4j_user         = module.ssm_parameter.ssm_parameter_name
+  source                = "./lambda"
+  lambda_name           = "lambda_transform"
+  layers                = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
+  archive_file          = data.archive_file.transform
+  environment_variables = local.transform_vars
 }
 
 module "load" {
-  source             = "./lambda"
-  lambda_name        = "lambda_load"
-  layers             = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
-  archive_file       = data.archive_file.load
-  ssm_parameter_name = var.ssm_parameter_name
-  os_uri             = var.os_uri
-  master_user        = var.os_master_user
-  neo4j_user         = module.ssm_parameter.ssm_parameter_name
+  source                = "./lambda"
+  lambda_name           = "lambda_load"
+  layers                = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
+  archive_file          = data.archive_file.load
+  environment_variables = local.load_vars
 }
 
 module "os_archive" {
