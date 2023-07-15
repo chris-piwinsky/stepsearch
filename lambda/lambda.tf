@@ -1,12 +1,11 @@
 variable "lambda_name" {}
 variable "layers" {}
 variable "archive_file" {}
-variable "ssm_parameter_name" {}
-variable "os_uri" {}
-variable "master_user" {}
-variable "neo4j_user" {}
-variable "efs_mount_path" {}
+variable "security_group_ids" {}
+variable "subnet_ids" {}
 variable "environment_variables" {}
+variable "efs_arn" {}
+
 
 resource "aws_lambda_function" "test_lambda" {
   # If the file is not in the current working directory you will need to include a
@@ -21,6 +20,11 @@ resource "aws_lambda_function" "test_lambda" {
 
   runtime = "python3.9"
 
+  vpc_config {
+    security_group_ids = var.security_group_ids
+    subnet_ids         = var.subnet_ids
+  }
+
   environment {
     variables = var.environment_variables
   }
@@ -28,4 +32,12 @@ resource "aws_lambda_function" "test_lambda" {
 
 output "lambda_arn" {
   value = aws_lambda_function.test_lambda.arn
+}
+
+resource "aws_lambda_permission" "efs_access" {
+  statement_id  = "AllowExecutionFromEFS-${aws_lambda_function.test_lambda.function_name}"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.test_lambda.function_name
+  principal     = "elasticfilesystem.amazonaws.com"
+  source_arn    = var.efs_arn
 }

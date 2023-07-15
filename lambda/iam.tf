@@ -58,6 +58,11 @@ resource "aws_iam_role_policy_attachment" "vpc_policy_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
+resource "aws_iam_role_policy_attachment" "lambda_role_attachment" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemClientFullAccess"
+  role       = aws_iam_role.os_role.name
+}
+
 resource "aws_iam_role_policy_attachment" "os_admin_policy_attach" {
   role       = aws_iam_role.os_role.name
   policy_arn = aws_iam_policy.os_admin_policy.arn
