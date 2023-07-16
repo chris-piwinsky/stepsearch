@@ -21,7 +21,9 @@ module "os_layer" {
 }
 
 module "efs_mount" {
-  source = "./efs"
+  source         = "./efs"
+  subnet_id      = local.subnet_ids
+  security_group = [local.security_group]
 }
 
 locals {
@@ -59,7 +61,7 @@ module "extract" {
   security_group_ids    = [local.security_group]
   layers                = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
   archive_file          = data.archive_file.extract
-  efs_arn               = module.efs_mount.arn
+  efs_access_point      = module.efs_mount.efs_access_point
   environment_variables = local.extract_vars
 }
 
@@ -70,7 +72,7 @@ module "transform" {
   security_group_ids    = [local.security_group]
   layers                = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
   archive_file          = data.archive_file.transform
-  efs_arn               = module.efs_mount.arn
+  efs_access_point      = module.efs_mount.efs_access_point
   environment_variables = local.transform_vars
 }
 
@@ -81,7 +83,7 @@ module "load" {
   security_group_ids    = [local.security_group]
   layers                = [module.os_layer.layer_arn, module.wrapper_layer.layer_arn]
   archive_file          = data.archive_file.load
-  efs_arn               = module.efs_mount.arn
+  efs_access_point      = module.efs_mount.efs_access_point
   environment_variables = local.load_vars
 }
 

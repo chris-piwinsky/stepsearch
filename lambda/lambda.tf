@@ -4,7 +4,7 @@ variable "archive_file" {}
 variable "security_group_ids" {}
 variable "subnet_ids" {}
 variable "environment_variables" {}
-variable "efs_arn" {}
+variable "efs_access_point" {}
 
 
 resource "aws_lambda_function" "test_lambda" {
@@ -20,6 +20,14 @@ resource "aws_lambda_function" "test_lambda" {
 
   runtime = "python3.9"
 
+  file_system_config {
+    # EFS file system access point ARN
+    arn = var.efs_access_point
+
+    # Local mount path inside the lambda function. Must start with '/mnt/'.
+    local_mount_path = "/mnt/efs"
+  }
+
   vpc_config {
     security_group_ids = var.security_group_ids
     subnet_ids         = var.subnet_ids
@@ -34,10 +42,4 @@ output "lambda_arn" {
   value = aws_lambda_function.test_lambda.arn
 }
 
-resource "aws_lambda_permission" "efs_access" {
-  statement_id  = "AllowExecutionFromEFS-${aws_lambda_function.test_lambda.function_name}"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.test_lambda.function_name
-  principal     = "elasticfilesystem.amazonaws.com"
-  source_arn    = var.efs_arn
-}
+
